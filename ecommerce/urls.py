@@ -35,7 +35,7 @@ urlpatterns = [
 
 # FRONTEND
 
-  path("",index,name="index"),
+  path("gi",index,name="index"),
   path("about/",about,name="about"),
   path("category/",category,name="category"),
   path('product/<int:cat_id>/', product, name='product'),
