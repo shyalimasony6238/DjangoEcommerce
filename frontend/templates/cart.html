@@ -1,0 +1,135 @@
+{% extends 'index.html' %}
+{% block content %}
+<style>
+  h1.cart-heading {
+    text-align: center;
+    font-size: 2rem;
+    font-weight: bold;
+    color: #2c3e50;
+    margin: 30px 0;
+  }
+
+  .cart-item {
+    border-bottom: 1px solid #ddd;
+    padding: 15px 0;
+  }
+
+  .cart-item img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 10px;
+  }
+
+  .quantity-input {
+    width: 70px;
+    text-align: center;
+  }
+
+  .address-box {
+    background: #f8f8f8;
+    padding: 20px;
+    border-radius: 10px;
+    margin-top: 30px;
+  }
+</style>
+
+<h1 class="cart-heading">Your Shopping Cart</h1>
+
+<div class="container">
+  {% if cart %}
+    <form method="POST" action="{% url 'update_cart' %}">
+      {% csrf_token %}
+      
+      {% for id, item in cart.items %}
+        <div class="row cart-item align-items-center">
+          <div class="col-md-2 text-center">
+            <img src="{{ item.image }}" alt="{{ item.pro_name }}">
+          </div>
+          <div class="col-md-3">
+            <h5>{{ item.pro_name }}</h5>
+          </div>
+          <div class="col-md-2">
+            <input type="number" 
+                   name="quantity_{{ id }}" 
+                   class="quantity-input form-control" 
+                   value="{{ item.quantity }}" 
+                   min="1" 
+                   onchange="updateTotal(this)">
+          </div>
+          <div class="col-md-2 text-success fw-bold price" data-price="{{ item.price }}">
+            ₹{{ item.price }}
+          </div>
+          <div class="col-md-3 text-end fw-bold subtotal">
+            ₹{{ item.price|floatformat:2|add:item.quantity|floatformat:2 }}
+          </div>
+        </div>
+      {% endfor %}
+
+      <hr>
+<hr>
+
+<h3 class="mt-4">Shipping Address</h3>
+
+<div class="row mt-3">
+    <div class="col-md-6">
+        <label class="form-label">Full Name</label>
+        <input type="text" name="full_name" class="form-control" required>
+    </div>
+
+    <div class="col-md-6">
+        <label class="form-label">Mobile Number</label>
+        <input type="text" name="mobile" class="form-control" required>
+    </div>
+
+    <div class="col-md-12 mt-3">
+        <label class="form-label">Address</label>
+        <textarea name="address" class="form-control" rows="2" required></textarea>
+    </div>
+
+    <div class="col-md-4 mt-3">
+        <label class="form-label">City</label>
+        <input type="text" name="city" class="form-control" required>
+    </div>
+
+    <div class="col-md-4 mt-3">
+        <label class="form-label">Pincode</label>
+        <input type="text" name="pincode" class="form-control" required>
+    </div>
+
+    <div class="col-md-4 mt-3">
+        <label class="form-label">State</label>
+        <input type="text" name="state" class="form-control" required>
+    </div>
+</div>
+
+<div class="text-end mt-4">
+    <h3 class="text-success">Total: ₹<span id="grandTotal">{{ total }}</span></h3>
+    <button type="submit" class="btn btn-primary mt-2">Update Cart</button>
+    <button type="submit" name="proceed" value="1" class="btn btn-success mt-2 ms-2">Proceed to Payment</button>
+</div>
+
+
+    
+    </form>
+  {% else %}
+    <p class="text-center mt-5">Your cart is empty.</p>
+  {% endif %}
+</div>
+
+<script>
+  function updateTotal(input) {
+    const row = input.closest('.cart-item');
+    const price = parseFloat(row.querySelector('.price').dataset.price);
+    const qty = parseInt(input.value);
+    const subtotal = price * qty;
+    row.querySelector('.subtotal').textContent = "₹" + subtotal.toFixed(2);
+
+    let total = 0;
+    document.querySelectorAll('.subtotal').forEach(el => {
+      total += parseFloat(el.textContent.replace("₹", ""));
+    });
+    document.getElementById('grandTotal').textContent = total.toFixed(2);
+  }
+</script>
+{% endblock %}

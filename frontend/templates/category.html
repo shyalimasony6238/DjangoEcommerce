@@ -1,0 +1,47 @@
+{% extends 'index.html' %} {% block content %} <style>
+    .category-heading {
+        text-align: center;
+        font-size: 2.2rem;
+        font-weight: 700;
+        color: #2c3e50;
+        margin: 30px 0 40px 0;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+    }
+
+    .card {
+        margin-bottom: 30px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .card img {
+        height: 400px;
+        object-fit: cover;
+    }
+</style>
+<div>
+    <h1 class="category-heading">Our Categories</h1>
+    <div class="container">
+        <div class="row"> 
+            {% for i in data %}
+             <div class="col-md-4 d-flex justify-content-center">
+                <div class="card" style="width: 18rem;"> <img src="{{ i.pro_cat_image.url }}" class="card-img-top"
+                        alt="{{ i.pro_name }}">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">{{ i.pro_name }}</h5>
+                        <p class="card-text">{{ i.pro_description }}</p>
+                        <a href="{% url 'product' i.id %}" class="btn btn-success">Click Here</a>
+                        <!-- above  link is for productpage -->
+                    </div>
+                </div>
+            </div> 
+            {% endfor %} 
+        </div>
+    </div>
+</div> {% endblock %}

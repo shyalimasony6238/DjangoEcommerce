@@ -1,0 +1,71 @@
+{% extends 'index.html' %}
+{% block content %}
+
+    <!-- <div class="clearfix">
+
+        <img src="../static/images/image3.jpg" class="col-md-6 float-md-end mb-3 ms-md-3" alt="..." height="80%">
+    </div> -->
+
+<section class="container py-5">
+  <div class="row align-items-center">
+    <!-- Brand Image -->
+    <div class="col-md-6 mb-4 mb-md-0">
+      <img src="../static/images/image3.jpg" 
+           class="img-fluid rounded shadow" 
+           alt="Avaanya Fashion" height="60%">
+    </div>
+
+    <!-- Brand Story -->
+    <div class="col-md-6">
+      <h2 class="fw-bold text-dark">Our Story</h2>
+      <p class="text-muted mt-3">
+        Avaanya is where fashion meets confidence. Born from a passion for timeless elegance and modern trends, 
+        we design clothing that empowers you to stand out effortlessly. From everyday essentials to statement pieces, 
+        our collections are crafted with care, comfort, and creativity.
+      </p>
+      <p class="text-muted">
+        We believe fashion is more than just clothing — it’s a lifestyle. Every piece is thoughtfully designed to 
+        celebrate individuality, sustainability, and self-expression.
+      </p>
+      <a href="{% url 'category' %}" class="btn btn-dark mt-3">Explore Our Collection</a>            
+    </div>
+  </div>
+</section>
+
+<!-- Mission & Vision -->
+<section class="bg-light py-5">
+  <div class="container text-center">
+    <h3 class="fw-bold">Our Mission</h3>
+    <p class="text-muted mt-3">
+      To inspire confidence and creativity through fashion that feels as good as it looks.
+    </p>
+    <h3 class="fw-bold mt-4">Our Vision</h3>
+    <p class="text-muted mt-3">
+      A world where style is sustainable, inclusive, and empowering for everyone.
+    </p>
+  </div>
+</section>
+
+<!-- Team Section -->
+<section class="container py-5">
+  <h3 class="fw-bold text-center mb-4">Meet the Team</h3>
+  <div class="row text-center">
+    <div class="col-md-4">
+      <img src="" class="rounded-circle mb-3" width="150" alt="Founder">
+      <h5 class="fw-bold">Shyalima Sony</h5>
+      <p class="text-muted">Founder & Creative Director</p>
+    </div>
+    <div class="col-md-4">
+      <img src="" class="rounded-circle mb-3" width="150" alt="Designer">
+      <h5 class="fw-bold">SanuRanj</h5>
+      <p class="text-muted">Lead Designer</p>
+    </div>
+    <div class="col-md-4">
+      <img src="" class="rounded-circle mb-3" width="150" alt="Marketing">
+      <h5 class="fw-bold">Aavanya</h5>
+      <p class="text-muted">Marketing Head</p>
+    </div>
+  </div>
+</section>
+
+{% endblock%}

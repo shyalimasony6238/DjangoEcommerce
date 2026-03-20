@@ -1,0 +1,24 @@
+<table border="2">
+    <tr>
+        <td>Category</td>
+        <td>Product name</td>
+        <td>Quantity</td>
+        <td>Price</td>
+        <td>Image</td>
+        <td>Action</td>
+    </tr>
+        {% for i in data %}
+    <tr>
+        <td>{{i.category}}</td>
+        <td>{{i.pro_name}}</td>
+        <td>{{i.qty}}</td>
+        <td>{{i.price}}</td>
+        <td><img src="{{i.p_image.url}}" alt="" height="200px" width="200px"></td>
+        <td>
+            <button><a href="{% url 'p_edit' dataid=i.id %}">Edit</a></button>
+            <button><a href="{% url 'p_delete' dataid=i.id %}">Delete</a></button>
+        </td>
+
+    </tr>
+    {% endfor %}
+</table>
