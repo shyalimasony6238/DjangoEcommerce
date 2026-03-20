@@ -146,9 +146,18 @@ STATICFILES_DIRS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',  # 👈 add this
-]
 
+    'django.contrib.sessions.middleware.SessionMiddleware',  # ✅ ADD THIS
+
+    'whitenoise.middleware.WhiteNoiseMiddleware',
+
+    'django.middleware.common.CommonMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
+
+    'django.contrib.auth.middleware.AuthenticationMiddleware',  # ✅ REQUIRED
+
+    'django.contrib.messages.middleware.MessageMiddleware',
+]
 
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
