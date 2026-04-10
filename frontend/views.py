@@ -7,6 +7,23 @@ def index(request):
 def about(request):
     return render(request,"about.html")
 
+def contact(request):
+    return render(request,"contact.html")
+
+
+from backend.models import Contact
+
+def contact(request):
+    if request.method == "POST":
+        Contact.objects.create(
+            name=request.POST.get("name"),
+            email=request.POST.get("email"),
+            message=request.POST.get("message")
+        )
+        return render(request, "contact.html", {"success": True})
+
+    return render(request, "contact.html")
+
 from backend.models import pro_category
 def category(request):
     data=pro_category.objects.all()
@@ -21,85 +38,158 @@ def product(request, cat_id):
     return render(request, "product.html", {"category": category, "products": products})
 
 
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import redirect
+from django.contrib.auth.decorators import login_required
 from backend.models import protable
+from backend.models import Cart
 
+
+# ✅ Add to Cart
+@login_required
 def add_to_cart(request, product_id):
     product = get_object_or_404(protable, id=product_id)
 
-    if not request.user.is_authenticated:
-        return redirect()   # force login
+    cart_item, created = Cart.objects.get_or_create(
+        user=request.user,
+        product=product
+    )
 
-    user_key = f"cart_{request.user.id}"  # unique cart per user
-
-    cart = request.session.get(user_key, {})
-
-    # If product already exists in cart, increase quantity
-    if str(product_id) in cart:
-        cart[str(product_id)]['quantity'] += 1
-    else:
-        cart[str(product_id)] = {
-            'pro_name': product.pro_name,
-            'price': float(product.price),
-            'image': product.p_image.url,
-            'quantity': 1
-        }
-
-    request.session[user_key] = cart
-    request.session.modified = True
-
-    return redirect('cart.html')
-def view_cart(request):
-    if not request.user.is_authenticated:
-        return redirect("login")
-
-    user_key = f"cart_{request.user.id}"
-    cart = request.session.get(user_key, {})
-
-    total = sum(item['price'] * item['quantity'] for item in cart.values())
-
-    return render(request, "cart.html", {"cart": cart, "total": total})
-
-def update_cart(request):
-    if not request.user.is_authenticated:
-        return redirect("login")
-
-    user_key = f"cart_{request.user.id}"
-    cart = request.session.get(user_key, {})
-
-    if request.method == "POST":
-
-        # Update Quantity
-        for product_id in list(cart.keys()):
-            qty_key = f"quantity_{product_id}"
-            if qty_key in request.POST:
-                new_qty = int(request.POST[qty_key])
-                if new_qty > 0:
-                    cart[product_id]['quantity'] = new_qty
-                else:
-                    cart.pop(product_id)
-
-        request.session[user_key] = cart
-        request.session.modified = True
-
-        # 👉 If user clicked PROCEED button
-        if "proceed" in request.POST:
-
-            # Save shipping address to session
-            request.session["shipping_address"] = {
-                "full_name": request.POST.get("full_name"),
-                "mobile": request.POST.get("mobile"),
-                "address": request.POST.get("address"),
-                "city": request.POST.get("city"),
-                "pincode": request.POST.get("pincode"),
-                "state": request.POST.get("state"),
-            }
-
-            request.session.modified = True
-
-            return redirect("")   # Go to payment options page
+    if not created:
+        cart_item.quantity += 1
+        cart_item.save()
 
     return redirect('view_cart')
+
+
+
+# ✅ View Cart
+@login_required
+def view_cart(request):
+    cart_items = Cart.objects.filter(user=request.user)
+    total = sum(item.total_price() for item in cart_items)
+
+    return render(request, 'cart.html', {
+        'cart_items': cart_items,
+        'total': total
+    })
+
+
+# ✅ Update Quantity
+@login_required
+def update_cart(request, cart_id):
+    cart_item = get_object_or_404(Cart, id=cart_id, user=request.user)
+
+    if request.method == "POST":
+        quantity = int(request.POST.get("quantity"))
+
+        if quantity > 0:
+            cart_item.quantity = quantity
+            cart_item.save()
+        else:
+            cart_item.delete()
+
+    return redirect('view_cart')
+
+
+# ✅ Remove Item
+@login_required
+def remove_from_cart(request, cart_id):
+    cart_item = get_object_or_404(Cart, id=cart_id, user=request.user)
+    cart_item.delete()
+
+    return redirect('view_cart')
+
+
+
+from backend.models import Order
+from django.conf import settings
+import razorpay
+
+@login_required
+def checkout(request):
+    cart_items = Cart.objects.filter(user=request.user)
+    total = sum(item.total_price() for item in cart_items)
+
+    if request.method == "POST":
+        address = request.POST.get("address")
+        phone = request.POST.get("phone")
+
+        order = Order.objects.create(
+            user=request.user,
+            total_amount=total,
+            address=address,
+            phone=phone
+        )
+
+        # Razorpay client
+        client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET))
+
+        payment = client.order.create({
+            "amount": int(total * 100),  # paise
+            "currency": "INR",
+            "payment_capture": 1
+        })
+
+        order.payment_id = payment['id']
+        order.save()
+
+        return render(request, "payment.html", {
+            "order": order,
+            "payment": payment,
+            "cart_items": cart_items,
+            "total": total
+        })
+
+    return render(request, "checkout.html", {
+        "cart_items": cart_items,
+        "total": total
+    })
+
+from django.views.decorators.csrf import csrf_exempt
+
+@csrf_exempt
+def payment_success(request):
+    if request.method == "POST":
+        order_id = request.POST.get("razorpay_order_id")
+
+        order = Order.objects.get(payment_id=order_id)
+        order.paid = True
+        order.save()
+
+        # Clear cart
+        Cart.objects.filter(user=order.user).delete()
+
+        return render(request, "success.html")
+
+    return redirect("index")
+
+
+
+def cart_count(request):
+    if request.user.is_authenticated:
+        items = Cart.objects.filter(user=request.user)
+        count = sum(item.quantity for item in items)
+    else:
+        count = 0
+
+    return {'cart_count': count}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

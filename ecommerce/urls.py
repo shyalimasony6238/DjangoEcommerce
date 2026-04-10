@@ -35,18 +35,23 @@ urlpatterns = [
 
 # FRONTEND
 
-  path("",index,name="index"),
-  path("about/",about,name="about"),
-  path("category/",category,name="category"),
-  path('product/<int:cat_id>/', product, name='product'),
-  path('add_to_cart/<int:product_id>/',add_to_cart, name='add_to_cart'),
-  path('cart/', view_cart, name='view_cart'),
-  path('update_cart/', update_cart, name='update_cart'),
-  path("login/", login_view, name="login"),
+path("",index,name="index"),
+path("about/",about,name="about"),
+path("category/",category,name="category"),
+path("contact/",contact,name="contact"),
+path('product/<int:cat_id>/', product, name='product'),
+    path('add-to-cart/<int:product_id>/', add_to_cart, name='add_to_cart'),
+    path('cart/', view_cart, name='view_cart'),
+    path('update-cart/<int:cart_id>/', update_cart, name='update_cart'),
+    path('remove-cart/<int:cart_id>/', remove_from_cart, name='remove_cart'),
+
+       path('checkout/', checkout, name='checkout'),
+       path('payment-success/', payment_success, name='payment_success'),
 
 
-  path("register/", register_view, name="register"),
-    path("logout/", logout_view, name="logout"),
+path("login/", login_view, name="login"),
+path("register/", register_view, name="register"),
+path("logout/", logout_view, name="logout"),
 
 ]
 from django.conf import settings

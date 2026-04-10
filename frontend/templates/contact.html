@@ -1,0 +1,71 @@
+{% extends 'index.html' %}
+{% block content %}
+
+<style>
+  body {
+    background: #f5f7fa;
+  }
+
+  .contact-container {
+    max-width: 700px;
+    margin: 60px auto;
+  }
+
+  .contact-card {
+    background: #fff;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+  }
+
+  .contact-title {
+    text-align: center;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: #2c3e50;
+  }
+
+  .form-control {
+    border-radius: 10px;
+    margin-bottom: 15px;
+  }
+
+  .btn-contact {
+    width: 100%;
+    border-radius: 10px;
+    padding: 10px;
+  }
+</style>
+
+<div class="contact-container">
+  <div class="contact-card">
+
+    <h2 class="contact-title">📩 Contact Us</h2>
+
+    {% if success %}
+<div class="alert alert-success">
+  Message sent successfully!
+</div>
+{% endif %}
+    <form method="POST">
+      {% csrf_token %}
+
+      <label>Name</label>
+      <input type="text" name="name" class="form-control" placeholder="Your Name" required>
+
+      <label>Email</label>
+      <input type="email" name="email" class="form-control" placeholder="Your Email" required>
+
+      <label>Message</label>
+      <textarea name="message" rows="4" class="form-control" placeholder="Your Message" required></textarea>
+
+      <button type="submit" class="btn btn-success btn-contact">
+        Send Message
+      </button>
+
+    </form>
+
+  </div>
+</div>
+
+{% endblock %}

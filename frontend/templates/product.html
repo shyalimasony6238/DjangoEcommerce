@@ -55,7 +55,7 @@
             <h5 class="card-title">{{ i.pro_name }}</h5>
             <p class="card-text">Quantity: {{ i.qty }}</p>
             <p class="card-text text-success fw-bold">₹{{ i.price }}</p>
-            <a href="{% url 'view_cart'  %}" class="btn btn-success">Add to Cart</a>
+            <a href="{% url 'add_to_cart' i.id %}" class="btn btn-success">Add to Cart</a>
 
           </div>
         </div>

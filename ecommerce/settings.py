@@ -62,6 +62,8 @@ TEMPLATES = [
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
+
+                'frontend.context_processors.cart_count',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
@@ -166,3 +168,7 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 CSRF_TRUSTED_ORIGINS = [
     "https://your-app-name.onrender.com"
 ]
+
+
+RAZORPAY_KEY_ID = "rzp_test_SbUA6ml5vN406y"
+RAZORPAY_KEY_SECRET = "I0O7Q9gVTktujREY5DPT5IEe"

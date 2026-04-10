@@ -1,0 +1,103 @@
+{% extends 'index.html' %}
+{% block content %}
+
+<style>
+  body {
+    background: #f5f7fa;
+  }
+
+  .checkout-container {
+    max-width: 600px;
+    margin: 50px auto;
+  }
+
+  .checkout-card {
+    background: #ffffff;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+  }
+
+  .checkout-title {
+    text-align: center;
+    font-weight: 700;
+    color: #2c3e50;
+    margin-bottom: 25px;
+  }
+
+  .form-label {
+    font-weight: 600;
+    margin-top: 10px;
+  }
+
+  .form-control {
+    border-radius: 10px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    margin-bottom: 10px;
+  }
+
+  .form-control:focus {
+    border-color: #28a745;
+    box-shadow: 0 0 5px rgba(40,167,69,0.3);
+  }
+
+  .total-box {
+    background: #ecfdf5;
+    padding: 15px;
+    border-radius: 10px;
+    text-align: center;
+    margin-top: 20px;
+  }
+
+  .total-box h4 {
+    margin: 0;
+    color: #28a745;
+    font-weight: bold;
+  }
+
+  .btn-checkout {
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+    border-radius: 10px;
+    margin-top: 20px;
+  }
+</style>
+
+<div class="checkout-container">
+  <div class="checkout-card">
+
+    <h2 class="checkout-title">🛒 Checkout</h2>
+
+    <form method="POST">
+      {% csrf_token %}
+
+      <!-- Name -->
+      <label class="form-label">Full Name</label>
+      <input type="text" name="name" class="form-control" placeholder="Enter your full name" required>
+
+      <!-- Address -->
+      <label class="form-label">Address</label>
+      <textarea name="address" class="form-control" rows="3" placeholder="Enter your address" required></textarea>
+
+      <!-- Phone -->
+      <label class="form-label">Phone Number</label>
+      <input type="text" name="phone" class="form-control" placeholder="Enter your phone number" required>
+
+      <!-- Total -->
+      <div class="total-box">
+        <h4>Total: ₹{{ total }}</h4>
+      </div>
+
+      <!-- Button -->
+      <button type="submit" class="btn btn-success btn-checkout">
+        Proceed to Payment
+      </button>
+
+    </form>
+
+  </div>
+</div>
+
+{% endblock %}

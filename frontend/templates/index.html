@@ -67,6 +67,12 @@
         }
     }
 
+
+    .badge {
+    font-size: 10px;
+    padding: 5px 7px;
+}
+
 </style>
 
 <nav class="custom-navbar navbar navbar navbar-expand-lg navbar-dark bg-dark" aria-label="Avaanya navigation bar">
@@ -85,7 +91,7 @@
                 </li>
                 <li><a class="nav-link" href="{% url 'about' %}">About us</a></li>
                 <li><a class="nav-link" href="{% url 'category' %}">Categories</a></li>
-                <li><a class="nav-link" href="">Contact us</a></li>
+                <li><a class="nav-link" href="{% url 'contact' %}">Contact us</a></li>
             </ul>
 
             <ul class="custom-navbar-cta navbar-nav mb-2 mb-lg-0 ms-lg-5">
@@ -104,11 +110,17 @@
                     <a class="nav-link" href="{% url 'register' %}">Register</a>
                 </li>
 
-                <li class="nav-item">
-                    <a class="nav-link" href="">
-                         <i class="fas fa-shopping-basket"></i> 
-                    </a>
-                </li>
+                <li class="nav-item position-relative">
+    <a class="nav-link" href="{% url 'view_cart' %}">
+        <i class="fas fa-shopping-basket"></i>
+
+        {% if cart_count > 0 %}
+        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+            {{ cart_count }}
+        </span>
+        {% endif %}
+    </a>
+</li>
             </ul>
 
         </div>

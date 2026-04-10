@@ -1,0 +1,42 @@
+{% extends 'index.html' %}
+{% block content %}
+
+<h2>Payment</h2>
+
+<button id="pay-btn" class="btn btn-primary">Pay Now</button>
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+<script>
+var options = {
+    "key": "{{ settings.RAZORPAY_KEY_ID }}",
+    "amount": "{{ payment.amount }}",
+    "currency": "INR",
+    "name": "My Shop",
+    "order_id": "{{ payment.id }}",
+
+    "handler": function (response){
+        var form = document.createElement('form');
+        form.method = 'POST';
+        form.action = "{% url 'payment_success' %}";
+
+        var input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = 'razorpay_order_id';
+        input.value = response.razorpay_order_id;
+
+        form.appendChild(input);
+        document.body.appendChild(form);
+        form.submit();
+    }
+};
+
+var rzp = new Razorpay(options);
+
+document.getElementById('pay-btn').onclick = function(e){
+    rzp.open();
+    e.preventDefault();
+}
+</script>
+
+{% endblock %}
