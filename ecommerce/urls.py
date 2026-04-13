@@ -16,8 +16,8 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from backend.views import *
-from frontend .views import *
+from backend.views import*
+from frontend.views import*
 urlpatterns = [
     path('admin/', admin.site.urls),
     # CATEGORY
@@ -40,6 +40,7 @@ path("about/",about,name="about"),
 path("category/",category,name="category"),
 path("contact/",contact,name="contact"),
 path('product/<int:cat_id>/', product, name='product'),
+
     path('add-to-cart/<int:product_id>/', add_to_cart, name='add_to_cart'),
     path('cart/', view_cart, name='view_cart'),
     path('update-cart/<int:cart_id>/', update_cart, name='update_cart'),
