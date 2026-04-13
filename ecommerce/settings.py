@@ -20,7 +20,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-k+)s+j#=wfr6b3bb33kdm231%3meiyvxk-8fm^%-0x#kmyw-)!'
+SECRET_KEY = 'django-insecure-k+)s+j#=wfr6b3bb33kdm231%3meiyvxk-8fm^%-v#kmyw-)!'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -43,26 +43,25 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
+
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
+
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
-
 ROOT_URLCONF = 'ecommerce.urls'
 
 TEMPLATES = [
-
     {
-        'DIRS': [os.path.join(BASE_DIR,'templates')],
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
-
                 'frontend.context_processors.cart_count',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
@@ -71,7 +70,6 @@ TEMPLATES = [
         },
     },
 ]
-
 WSGI_APPLICATION = 'ecommerce.wsgi.application'
 
 
@@ -132,7 +130,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = [
+    'djangoecommerce-mkfu.onrender.com',
+    '*'
+]
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
@@ -142,28 +143,9 @@ import os
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-
 STATICFILES_DIRS = [BASE_DIR / "static"]
                     
                     
-
-
-MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
-
-    'django.contrib.sessions.middleware.SessionMiddleware',  # ✅ ADD THIS
-
-    'whitenoise.middleware.WhiteNoiseMiddleware',
-
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-
-    'django.contrib.auth.middleware.AuthenticationMiddleware',  # ✅ REQUIRED
-
-    'django.contrib.messages.middleware.MessageMiddleware',
-]
-
-
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 
