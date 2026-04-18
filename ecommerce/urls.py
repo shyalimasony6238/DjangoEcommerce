@@ -53,7 +53,7 @@ path('product/<int:cat_id>/', product, name='product'),
 path("login/", login_view, name="login"),
 path("register/", register_view, name="register"),
 path("logout/", logout_view, name="logout"),
-
+path('accounts/login/',login, name='login'),
 ]
 from django.conf import settings
 from django.conf.urls.static import static
